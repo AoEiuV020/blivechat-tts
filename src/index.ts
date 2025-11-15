@@ -1,7 +1,7 @@
 import WebSocket from 'ws';
 import * as fs from 'fs';
 import { MessageHandler } from './messageHandler';
-import { LoggerConsumer, HeartbeatConsumer, DanmakuConsumer } from './consumers';
+import { LoggerConsumer, HeartbeatConsumer, DanmakuConsumer, ConnectionConsumer } from './consumers';
 
 interface Config {
   token?: string;
@@ -89,6 +89,7 @@ async function connectToServer(): Promise<void> {
   messageHandler.registerConsumer(new LoggerConsumer());
   messageHandler.registerConsumer(new HeartbeatConsumer());
   messageHandler.registerConsumer(new DanmakuConsumer());
+  messageHandler.registerConsumer(new ConnectionConsumer());
 
   // 连接打开事件
   ws.on('open', () => {
