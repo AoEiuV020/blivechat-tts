@@ -3,13 +3,13 @@ import { say } from '../tts';
 
 /**
  * 弹幕消费者
- * 负责处理弹幕消息 (cmd==2) 并播报
+ * 负责处理弹幕消息 (cmd==2 或 cmd==50) 并播报
  */
 export class DanmakuConsumer implements MessageConsumer {
   name = 'DanmakuConsumer';
 
   async handle(message: WSMessage): Promise<void> {
-    if (message.cmd === 2) {
+    if (message.cmd === 2 || message.cmd === 50) {
       try {
         const data = message.data as any[];
         
