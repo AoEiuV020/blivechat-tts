@@ -19,8 +19,6 @@ services:
   blivechat-tts:
     build: .
     container_name: blivechat-tts
-    depends_on:
-      - blivechat
     volumes:
       - signal-volume:/tmp/signal
     environment:
