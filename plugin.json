@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "author": "AoEiuV020",
   "description": "blivechat的语音播报插件",
-  "run": "node /app/write-signal.js",
+  "run": "echo \"token=$BLC_TOKEN\" > $SIGNAL_FILE_PATH && echo \"port=$BLC_PORT\" >> $SIGNAL_FILE_PATH && echo \"host=$BLC_HOST\" >> $SIGNAL_FILE_PATH",
   "enabled": true
 }

@@ -8,11 +8,26 @@ blivechat的语音播报插件
 - 接收并记录来自服务器的消息
 - 支持信号文件方式配置（用于插件集成）
 - 提供 Docker Compose 一键部署
+- 使用 TypeScript 编写
 
-## 安装
+## 开发
+
+### 安装依赖
 
 ```bash
 pnpm install
+```
+
+### 构建
+
+```bash
+pnpm build
+```
+
+### 开发模式
+
+```bash
+pnpm dev
 ```
 
 ## 使用方式
@@ -28,6 +43,9 @@ pnpm install
 #### 运行
 
 ```bash
+# 先构建
+pnpm build
+
 # 连接到本机服务器
 BLC_TOKEN=your_token pnpm start
 
@@ -48,7 +66,7 @@ BLC_TOKEN=your_token pnpm start example.com
 
 ```bash
 # 设置信号文件路径
-SIGNAL_FILE_PATH=/tmp/config.txt node index.js
+SIGNAL_FILE_PATH=/tmp/config.txt pnpm start
 ```
 
 信号文件格式（每行一个配置）：
@@ -62,10 +80,9 @@ host=localhost
 
 使用 Docker Compose 可以同时运行 blivechat 服务器和 TTS 插件：
 
-1. 复制 `.env.example` 为 `.env` 并配置：
+1. 创建 `.env` 文件并设置 token：
 ```bash
-cp .env.example .env
-# 编辑 .env 文件，设置 BLC_TOKEN
+echo "BLC_TOKEN=your_token" > .env
 ```
 
 2. 启动服务：
@@ -85,13 +102,22 @@ docker-compose down
 
 ## 插件集成
 
-项目提供了 `plugin.json` 文件，可以作为 blivechat 的插件使用。该插件会通过信号文件与主服务通信。
+项目提供了 `plugin.json` 文件，可以作为 blivechat 的插件使用。
+
+插件通过纯 shell 命令写入信号文件：
+```bash
+echo "token=$BLC_TOKEN" > $SIGNAL_FILE_PATH
+echo "port=$BLC_PORT" >> $SIGNAL_FILE_PATH
+echo "host=$BLC_HOST" >> $SIGNAL_FILE_PATH
+```
+
+blivechat 会在环境变量中提供 `BLC_TOKEN`、`BLC_PORT`、`BLC_HOST` 和 `SIGNAL_FILE_PATH`，插件的 run 命令将这些信息写入信号文件，TTS 服务读取该文件获取配置。
 
 ## 文件说明
 
-- `index.js` - 主程序入口
-- `write-signal.js` - 信号文件写入脚本（用于插件模式）
+- `src/index.ts` - 主程序入口（TypeScript）
+- `dist/` - 编译后的 JavaScript 文件
 - `plugin.json` - blivechat 插件配置文件
 - `docker-compose.yml` - Docker Compose 配置
 - `Dockerfile` - Docker 镜像构建文件
-- `config.ini` - blivechat 配置文件示例
+- `tsconfig.json` - TypeScript 配置

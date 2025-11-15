@@ -8,11 +8,13 @@ services:
       - "12450:12450"
     volumes:
       - blivechat-data:/mnt/data
-      - ./config.ini:/mnt/data/data/config.ini
       - ./plugin.json:/mnt/data/data/plugins/blivechat-tts/plugin.json
       - signal-volume:/tmp/signal
     environment:
       - SIGNAL_FILE_PATH=/tmp/signal/config.txt
+      - BLC_TOKEN=${BLC_TOKEN}
+      - BLC_PORT=12450
+      - BLC_HOST=blivechat
     restart: unless-stopped
 
   blivechat-tts:
@@ -24,9 +26,6 @@ services:
       - signal-volume:/tmp/signal
     environment:
       - SIGNAL_FILE_PATH=/tmp/signal/config.txt
-      - BLC_TOKEN=${BLC_TOKEN}
-      - BLC_PORT=12450
-      - BLC_HOST=blivechat
     restart: unless-stopped
 
 volumes:
