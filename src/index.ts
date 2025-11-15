@@ -68,7 +68,7 @@ async function connectToServer(): Promise<void> {
   }
 
   // 构建 WebSocket URL
-  const wsUrl = `ws://${serverHost}:${port}`;
+  const wsUrl = `ws://${serverHost}:${port}/api/plugin/websocket`;
 
   console.log(`正在连接到 WebSocket 服务器: ${wsUrl}`);
   console.log(`使用 Token: ${token.substring(0, 10)}...`);
