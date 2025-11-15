@@ -9,6 +9,8 @@ blivechat的语音播报插件
   - **日志消费者**：记录所有接收到的消息
   - **心跳消费者**：自动响应心跳包 (cmd=0)
   - **弹幕消费者**：处理弹幕消息 (cmd=2 或 cmd=50) 并播报
+    - 使用 `say` 库调用系统 TTS 进行语音播报
+    - 自动截断过长的用户名（特别是长数字串）
 - 支持信号文件方式配置（用于插件集成）
 - 提供 Docker Compose 一键部署
 - 使用 TypeScript 编写，完整类型定义
@@ -158,7 +160,8 @@ export class MyConsumer implements MessageConsumer {
   - `loggerConsumer.ts` - 日志消费者
   - `heartbeatConsumer.ts` - 心跳消费者
   - `danmakuConsumer.ts` - 弹幕消费者
-- `src/tts.ts` - TTS 播报模块
+- `src/tts.ts` - TTS 播报模块（集成 say 库，支持系统 TTS）
+- `src/types/say.d.ts` - say 库类型定义
 - `dist/` - 编译后的 JavaScript 文件
 - `plugin.json` - blivechat 插件配置文件
 - `docker-compose.yml` - Docker Compose 配置

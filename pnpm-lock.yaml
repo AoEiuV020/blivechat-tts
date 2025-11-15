@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      say:
+        specifier: ^0.16.0
+        version: 0.16.0
       ws:
         specifier: ^8.18.3
         version: 8.18.3
@@ -202,8 +205,15 @@ packages:
   get-tsconfig@4.13.0:
     resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
 
+  one-time@0.0.4:
+    resolution: {integrity: sha512-qAMrwuk2xLEutlASoiPiAMW3EN3K96Ka/ilSXYr6qR1zSVXw2j7+yDSqGTC4T9apfLYxM3tLLjKvgPdAUK7kYQ==}
+
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
+
+  say@0.16.0:
+    resolution: {integrity: sha512-yEfncNu3I6lcZ6RIrXgE9DqbrEmvV5uQQ8ReM14u/DodlvJYpveqNphO55RLMSj77b06ZKNif/FLmhzQxcuUXg==}
+    engines: {node: '>=6.9'}
 
   tsx@4.20.6:
     resolution: {integrity: sha512-ytQKuwgmrrkDTFP4LjR0ToE2nqgy886GpvRSpU0JAnrdBYppuY5rLkRUYPU1yCryb24SsKBTL/hlDQAEFVwtZg==}
@@ -354,7 +364,13 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  one-time@0.0.4: {}
+
   resolve-pkg-maps@1.0.0: {}
+
+  say@0.16.0:
+    dependencies:
+      one-time: 0.0.4
 
   tsx@4.20.6:
     dependencies:
