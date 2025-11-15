@@ -1,5 +1,5 @@
 import { MessageConsumer, WSMessage, DanmakuData } from '../types';
-import { say, truncateUsername } from '../tts';
+import { speak, truncateUsername } from '../tts';
 
 /**
  * 弹幕消费者
@@ -40,7 +40,7 @@ export class DanmakuConsumer implements MessageConsumer {
 
         // 截断用户名并调用 TTS 播报
         const truncatedUsername = truncateUsername(danmaku.username);
-        await say(`${truncatedUsername} 说 ${danmaku.message}`);
+        await speak(`${truncatedUsername} 说 ${danmaku.message}`);
       } catch (error) {
         console.error(`[Danmaku] 处理弹幕失败:`, error);
       }

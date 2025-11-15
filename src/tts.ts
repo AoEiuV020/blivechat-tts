@@ -1,4 +1,4 @@
-import { speak } from 'say';
+import say from 'say';
 
 /**
  * TTS (Text-To-Speech) 模块
@@ -9,13 +9,13 @@ import { speak } from 'say';
  * 播报文字
  * @param text 要播报的文字
  */
-export async function say(text: string): Promise<void> {
+export async function speak(text: string): Promise<void> {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] [TTS] 播报: ${text}`);
   
   return new Promise((resolve, reject) => {
     // 使用系统 TTS 播报
-    speak(text, undefined, undefined, (err) => {
+    say.speak(text, undefined, undefined, (err) => {
       if (err) {
         console.error(`[${timestamp}] [TTS] 播报失败:`, err);
         reject(err);
