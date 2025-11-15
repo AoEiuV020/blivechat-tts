@@ -5,10 +5,13 @@ blivechat的语音播报插件
 
 - 通过 WebSocket 连接到 blivechat 服务器
 - 使用 Bearer Token 进行身份验证
-- 接收并记录来自服务器的消息
+- **消息处理系统**：支持多个消费者并行处理消息
+  - **日志消费者**：记录所有接收到的消息
+  - **心跳消费者**：自动响应心跳包 (cmd=0)
+  - **弹幕消费者**：处理弹幕消息 (cmd=2) 并播报
 - 支持信号文件方式配置（用于插件集成）
 - 提供 Docker Compose 一键部署
-- 使用 TypeScript 编写
+- 使用 TypeScript 编写，完整类型定义
 
 ## 开发
 
@@ -106,9 +109,56 @@ printf "token=%s\nport=%s\nhost=%s\n" "$BLC_TOKEN" "$BLC_PORT" "$BLC_HOST" > $SI
 
 blivechat 会自动在环境变量中提供 `BLC_TOKEN`、`BLC_PORT` 和 `SIGNAL_FILE_PATH`。docker-compose 中只需要设置 `BLC_HOST`（用于指定 TTS 服务连接的主机名）。插件的 run 命令将这些信息写入信号文件，TTS 服务读取该文件获取配置。
 
+## 架构说明
+
+### 消息处理流程
+
+```
+WebSocket 消息 → MessageHandler → 多个消费者并行处理
+                                  ├─ LoggerConsumer (记录日志)
+                                  ├─ HeartbeatConsumer (响应心跳)
+                                  └─ DanmakuConsumer (播报弹幕)
+```
+
+### 消息格式
+
+所有 WebSocket 消息都是 JSON 格式：
+```json
+{
+  "cmd": 0,     // 命令类型
+  "data": {}    // 数据内容
+}
+```
+
+- **cmd=0**: 心跳包，自动发送响应
+- **cmd=2**: 弹幕消息，格式为数组，包含用户名和消息内容
+
+### 扩展消费者
+
+要添加新的消息消费者，实现 `MessageConsumer` 接口：
+
+```typescript
+import { MessageConsumer, WSMessage } from './types';
+
+export class MyConsumer implements MessageConsumer {
+  name = 'MyConsumer';
+  
+  async handle(message: WSMessage, sendMessage: (msg: WSMessage) => void): Promise<void> {
+    // 处理消息逻辑
+  }
+}
+```
+
 ## 文件说明
 
-- `src/index.ts` - 主程序入口（TypeScript）
+- `src/index.ts` - 主程序入口
+- `src/types.ts` - 类型定义
+- `src/messageHandler.ts` - 消息处理器
+- `src/consumers/` - 消息消费者
+  - `loggerConsumer.ts` - 日志消费者
+  - `heartbeatConsumer.ts` - 心跳消费者
+  - `danmakuConsumer.ts` - 弹幕消费者
+- `src/tts.ts` - TTS 播报模块
 - `dist/` - 编译后的 JavaScript 文件
 - `plugin.json` - blivechat 插件配置文件
 - `docker-compose.yml` - Docker Compose 配置

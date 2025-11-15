@@ -1,5 +1,7 @@
 import WebSocket from 'ws';
 import * as fs from 'fs';
+import { MessageHandler } from './messageHandler';
+import { LoggerConsumer, HeartbeatConsumer, DanmakuConsumer } from './consumers';
 
 interface Config {
   token?: string;
@@ -80,6 +82,14 @@ async function connectToServer(): Promise<void> {
     }
   });
 
+  // 创建消息处理器
+  const messageHandler = new MessageHandler(ws);
+  
+  // 注册消费者
+  messageHandler.registerConsumer(new LoggerConsumer());
+  messageHandler.registerConsumer(new HeartbeatConsumer());
+  messageHandler.registerConsumer(new DanmakuConsumer());
+
   // 连接打开事件
   ws.on('open', () => {
     console.log(`[${new Date().toISOString()}] WebSocket 连接已建立`);
@@ -87,7 +97,7 @@ async function connectToServer(): Promise<void> {
 
   // 接收消息事件
   ws.on('message', (data: WebSocket.Data) => {
-    console.log(`[${new Date().toISOString()}] 收到消息:`, data.toString());
+    messageHandler.handleMessage(data);
   });
 
   // 连接关闭事件
