@@ -9,6 +9,7 @@ services:
     volumes:
       - blivechat-data:/mnt/data
       - ./plugin.json:/mnt/data/data/plugins/blivechat-tts/plugin.json
+      - ./config.ini:/mnt/data/data/config.ini
       - signal-volume:/tmp/signal
     environment:
       - SIGNAL_FILE_PATH=/tmp/signal/config.txt
@@ -29,3 +30,8 @@ services:
 volumes:
   blivechat-data:
   signal-volume:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=1m"
