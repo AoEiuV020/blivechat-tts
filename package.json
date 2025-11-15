@@ -1,0 +1,17 @@
+{
+  "name": "blivechat-tts",
+  "version": "1.0.0",
+  "description": "blivechat的语音播报插件",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.22.0",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}
