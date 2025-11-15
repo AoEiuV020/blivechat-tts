@@ -16,9 +16,6 @@ export async function loadConfig(): Promise<Config> {
     // 如果设置了 SIGNAL_FILE_PATH，监控该文件
     console.log(`等待信号文件: ${signalFilePath}`);
 
-    // 记录启动时间，只接受启动后创建的文件
-    const startTime = Date.now();
-
     while (true) {
       // 等待文件出现
       while (!fs.existsSync(signalFilePath)) {
@@ -29,14 +26,6 @@ export async function loadConfig(): Promise<Config> {
       const stats = fs.statSync(signalFilePath);
       const fileModifiedTime = stats.mtimeMs;
 
-      // 如果文件是在程序启动之前创建的，删除它并继续等待
-      if (fileModifiedTime < startTime) {
-        console.log(`检测到旧文件（创建于 ${new Date(fileModifiedTime).toISOString()}），删除并继续等待...`);
-        fs.unlinkSync(signalFilePath);
-        continue;
-      }
-
-      // 文件是刚创建的，读取它
       console.log(`读取信号文件: ${signalFilePath}`);
       break;
     }
@@ -55,6 +44,14 @@ export async function loadConfig(): Promise<Config> {
         if (key === 'host') config.host = value;
       }
     });
+
+    // 读取成功后删除信号文件
+    try {
+      fs.unlinkSync(signalFilePath);
+      console.log(`已删除信号文件: ${signalFilePath}`);
+    } catch (error) {
+      console.warn(`删除信号文件失败: ${error}`);
+    }
 
     return config;
   } else {
