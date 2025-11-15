@@ -80,12 +80,7 @@ host=localhost
 
 使用 Docker Compose 可以同时运行 blivechat 服务器和 TTS 插件：
 
-1. 创建 `.env` 文件并设置 token：
-```bash
-echo "BLC_TOKEN=your_token" > .env
-```
-
-2. 启动服务：
+启动服务：
 ```bash
 docker-compose up -d
 ```
@@ -106,12 +101,10 @@ docker-compose down
 
 插件通过纯 shell 命令写入信号文件：
 ```bash
-echo "token=$BLC_TOKEN" > $SIGNAL_FILE_PATH
-echo "port=$BLC_PORT" >> $SIGNAL_FILE_PATH
-echo "host=$BLC_HOST" >> $SIGNAL_FILE_PATH
+printf "token=%s\nport=%s\nhost=%s\n" "$BLC_TOKEN" "$BLC_PORT" "$BLC_HOST" > $SIGNAL_FILE_PATH
 ```
 
-blivechat 会在环境变量中提供 `BLC_TOKEN`、`BLC_PORT`、`BLC_HOST` 和 `SIGNAL_FILE_PATH`，插件的 run 命令将这些信息写入信号文件，TTS 服务读取该文件获取配置。
+blivechat 会自动在环境变量中提供 `BLC_TOKEN`、`BLC_PORT` 和 `SIGNAL_FILE_PATH`。docker-compose 中只需要设置 `BLC_HOST`（用于指定 TTS 服务连接的主机名）。插件的 run 命令将这些信息写入信号文件，TTS 服务读取该文件获取配置。
 
 ## 文件说明
 
