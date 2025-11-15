@@ -10,26 +10,11 @@ services:
       - blivechat-data:/mnt/data
       - ./plugin.json:/mnt/data/data/plugins/blivechat-tts/plugin.json
       - ./config.ini:/mnt/data/data/config.ini
-      - signal-volume:/tmp/signal
+      - ./signal:/tmp/signal
     environment:
-      - SIGNAL_FILE_PATH=/tmp/signal/config.txt
-      - BLC_HOST=blivechat
-    restart: unless-stopped
-
-  blivechat-tts:
-    build: .
-    container_name: blivechat-tts
-    volumes:
-      - signal-volume:/tmp/signal
-    environment:
-      - SIGNAL_FILE_PATH=/tmp/signal/config.txt
+      - SIGNAL_FILE_PATH=/tmp/signal/blivechat-tts.signal
+      - BLC_HOST=localhost
     restart: unless-stopped
 
 volumes:
   blivechat-data:
-  signal-volume:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: "size=1m"
