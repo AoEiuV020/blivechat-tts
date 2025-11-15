@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  blivechat:
+    image: xfgryujk/blivechat:latest
+    container_name: blivechat
+    ports:
+      - "12450:12450"
+    volumes:
+      - blivechat-data:/mnt/data
+      - ./plugin.json:/mnt/data/data/plugins/blivechat-tts/plugin.json
+      - signal-volume:/tmp/signal
+    environment:
+      - SIGNAL_FILE_PATH=/tmp/signal/config.txt
+      - BLC_HOST=blivechat
+    restart: unless-stopped
+
+  blivechat-tts:
+    build: .
+    container_name: blivechat-tts
+    depends_on:
+      - blivechat
+    volumes:
+      - signal-volume:/tmp/signal
+    environment:
+      - SIGNAL_FILE_PATH=/tmp/signal/config.txt
+    restart: unless-stopped
+
+volumes:
+  blivechat-data:
+  signal-volume:
